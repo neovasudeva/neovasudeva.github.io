@@ -1,0 +1,6 @@
+{
+    "title": "nanium",
+    "proj_summary": "a 32-bit 5-stage scalar pipelined RISC-V processor",
+    "date": "3 May 2021",
+    "gh_link": "https://github.com/neovasudeva/Nanium"
+}
