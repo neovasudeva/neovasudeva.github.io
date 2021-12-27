@@ -16,28 +16,57 @@
         creating a simple personal site
     </h1>
 
-    <h2>Objective</h2>
-<p>I wanted to create a personal site to contain my projects along with the steps I took to create them, hence the motivation for this site. Specifically, I wanted
-to be able to:</p>
+    <h2 id="objective">Objective</h2>
+<p>I wanted to create a personal site to contain my projects along with the steps I took to create them. I wanted to be able to:</p>
 <ul>
 <li>easily add content</li>
 <li>keep the site simple</li>
-<li>look somewhat nice</li>
+<li>make the site look somewhat nice</li>
 </ul>
-<p>I'm not very good in web development and my js skills are ... nonexistent. That led me to look at other personal sites for inspiration.</p>
-<h2>Inspiration and credits</h2>
-<p>I have to give a lot of credit to Supercip971 on github. I essentially used his 
-(?) styling and idea of using Markdown to create this simple website.</p>
-<h2>Dynamic html generation</h2>
-<p>coming soon ...</p>
-<h2>Markdown to html conversion</h2>
-<p>coming soon ...</p>
-<h2>Testing with a build directory</h2>
-<p>coming soon ...</p>
-<h2>Deployment</h2>
-<p>coming soon ...</p>
-<h2>Conclusion</h2>
-<p>coming soon ...</p>
+<h2 id="inspiration-and-credits">Inspiration and credits</h2>
+<p>Massive credit to <a href="https://github.com/Supercip971">Supercip971</a> on github. He (?) has a great <a href="https://supercip971.github.io/">personal blog</a> as well as an article on how he did it.</p>
+<p>I used his method of converting markdown and config files to html. I also used the same styling he did (the css file I used is straight from him).</p>
+<h2 id="markdown-to-html-conversion">Markdown to html conversion</h2>
+<p>I used pypandoc to convert markdown to html. This is used to convert blog articles written in markdown to html. It’s what Supercip971 used and it’s the only library I could find that satisfactorily converted markdown to html.</p>
+<p>There is another library called python-markdown, but it does not properly create html for codeblocks.</p>
+<h2 id="dynamic-html-generation">Dynamic html generation</h2>
+<p>The final html for this site is dynamically generated from:</p>
+<ol type="1">
+<li>the markdown files</li>
+<li>json configuration files</li>
+<li>templated html</li>
+</ol>
+<p>These 3 sources are fed to a python script, which uses the json and markdown files to fill the templated html. This is better visualized as:</p>
+<p><img src="assets/img/workings.png" /></p>
+<p>Let’s take a closer look at the templated html and json config files. Throughout the template, there are lines that look like:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb1-1" title="1"><span class="co">&lt;!-- ... html above ... --&gt;</span></a>
+<a class="sourceLine" id="cb1-2" title="2"><span class="kw">&lt;h1&gt;</span> {{ title }} <span class="kw">&lt;/h1&gt;</span></a>
+<a class="sourceLine" id="cb1-3" title="3"><span class="co">&lt;!-- .. more --&gt;</span></a>
+<a class="sourceLine" id="cb1-4" title="4"><span class="kw">&lt;p&gt;</span> {{ date }} <span class="kw">&lt;/p&gt;</span></a>
+<a class="sourceLine" id="cb1-5" title="5"><span class="co">&lt;!-- ... html below ... --&gt;</span></a></code></pre></div>
+<p>“title” and “date” are both keys that are meant to be replaced. Keys are surrounded by double brackets. Looking at the json config file:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><a class="sourceLine" id="cb2-1" title="1"><span class="fu">{</span></a>
+<a class="sourceLine" id="cb2-2" title="2">    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;new blog!&quot;</span><span class="fu">,</span></a>
+<a class="sourceLine" id="cb2-3" title="3">    <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2 May 2021&quot;</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="fu">}</span></a></code></pre></div>
+<p>Our keys “title” and “date” are defined with values “new blog!” and “2 May 2021” respectively. Given this json config file and the templated html, the python script will find keys and replace them with the values defined in the json file to generate the final html. Our final html will look like:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb3-1" title="1"><span class="co">&lt;!-- ... html above ... --&gt;</span></a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="kw">&lt;h1&gt;</span> new blog! <span class="kw">&lt;/h1&gt;</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">&lt;!-- .. more --&gt;</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="kw">&lt;p&gt;</span> 2 May 2021 <span class="kw">&lt;/p&gt;</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">&lt;!-- ... html below ... --&gt;</span></a></code></pre></div>
+<h2 id="content-sections">Content sections</h2>
+<p>Templated html will also have sections that contain:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode html"><code class="sourceCode html"><a class="sourceLine" id="cb4-1" title="1"><span class="co">&lt;!-- ... html above ... --&gt;</span></a>
+<a class="sourceLine" id="cb4-2" title="2">[[content]]</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">&lt;!-- ... html below ... --&gt;</span></a></code></pre></div>
+<p>where [[content]] will be replaced with html generated from markdown. For example, This is used for blog article html where the article itself is created in markdown and then converted to html via pypandoc.</p>
+<h2 id="deployment">Deployment</h2>
+<p>I deployed the site with <a href="https://github.com/marketplace/actions/deploy-to-github-pages">github actions</a>.</p>
+<h2 id="conclusion">Conclusion</h2>
+<p>It’s been a while so my python code is probably trash. However, I’m very satisfied with the result. I’ve tried many times to create a personal site, but I was never happy with the result.</p>
+<p>Now, I have a platform to link projects and talk about how I built them. Moreover, I didn’t have to learn some esoteric js framework!</p>
+
 
     <h5>written by neovasudeva on 26 december 2021</h5>
     <h6><a href="index.html">back to index ></a></h6>
