@@ -1,8 +1,10 @@
-from os import listdir, remove, unlink
-from os.path import isfile, join, isfile, islink, isdir
 import json
 import functools
 import shutil
+import markdown
+
+from os import listdir, unlink
+from os.path import isfile, join, isfile, islink, isdir
 
 # globals
 path_to_index = './src/index'
@@ -48,11 +50,12 @@ def generate_blogs_html():
     for b in blogs:
         with open(join(path_to_blogs, b), 'r') as b_json:
             b_json_dict = json.loads(b_json.read())
+            b_no_ext = b[:b.rindex('.')]
             b_html = \
                 "<h2> " + b_json_dict["title"] + " </h2>\n" + \
                 "<h5> written " + b_json_dict["date"] + " </h5>\n" + \
                 "<h4> " + b_json_dict["blog_summary"] + " </h4>\n" + \
-                "<a href=\"" + b_json_dict["blog_link"] + "\">read more</a>" 
+                "<a href=\"" + b_no_ext + ".html\">read more</a>" 
             blogs_html.append(b_html)
 
     # surround each project with div
@@ -83,8 +86,43 @@ def generate_index_html():
 
     return index_txt
 
-if __name__ == '__main__':
-    # clear build dir
+## Functions for converting blog markdown files and generating html ##
+def generate_blogs():
+    # get blogs
+    blogs = [f for f in listdir(path_to_blogs) if isfile(join(path_to_blogs, f))] 
+    blogs = list(filter(lambda x: x[x.rindex('.')+1:] == "json", blogs))
+    blogs = list(map(lambda x: x[:x.rindex('.')], blogs))
+
+    # generate html for each blog site
+    for b in blogs: 
+        # [[content]] html
+        content_html = ""
+        with open(join(path_to_blogs, b + '.md'), 'r') as f:
+            text = f.read()
+            content_html = markdown.markdown(text)
+
+        # json dict
+        b_json_dict = {}
+        with open(join(path_to_blogs, b + '.json'), 'r') as b_json:
+            b_json_dict = json.loads(b_json.read())
+        
+        # parse {{}} and replace
+        b_txt = ""
+        with open(join(path_to_templates, 'article.html'), 'r') as article_html:
+            b_txt = article_html.read()
+            for k in b_json_dict.keys():
+                b_txt = b_txt.replace("{{" + k + "}}", b_json_dict[k])
+
+        # replace content
+        b_txt = b_txt.replace("[[content]]", content_html)
+
+        # write html file to build directory
+        with open(join(path_to_build, b + '.html'), 'w') as f:
+            f.write(b_txt)
+
+## Util functions for creating and deleting files ##
+# clear build directory
+def clear_build():
     for filename in listdir(path_to_build):
         file_path = join(path_to_build, filename)
         try:
@@ -95,6 +133,8 @@ if __name__ == '__main__':
         except Exception as e:
             print('Failed to delete %s. Reason: %s' % (file_path, e))    
 
+# copy assets and create index/blogs to copy to build directory
+def create_build():
     # write all files to build directory
     index_txt = generate_index_html()
     with open(join(path_to_build, 'index.html'), 'w') as index_html:
@@ -106,4 +146,13 @@ if __name__ == '__main__':
     with open(join(path_to_build, 'about.html'), 'w') as about_html:
         about_html.write(about_txt)
 
+    # copy assets
     shutil.copytree(path_to_assets, join(path_to_build, 'assets'))
+
+    # generate blog pages
+    generate_blogs()
+
+if __name__ == '__main__':
+    clear_build()
+    create_build()
+
