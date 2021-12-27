@@ -9,6 +9,7 @@ jobs:
 
       - name: Install and Build 
         run: |
+          sudo apt-get install pandoc
           pip install pypandoc
           python md2html.py
 
