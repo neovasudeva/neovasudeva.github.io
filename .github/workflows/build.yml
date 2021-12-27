@@ -9,7 +9,7 @@ jobs:
 
       - name: Install and Build 
         run: |
-          pip install markdown
+          pip install pypandoc
           python md2html.py
 
       - name: Deploy 

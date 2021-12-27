@@ -1,7 +1,7 @@
 import json
 import functools
 import shutil
-import markdown
+import pypandoc
 
 from os import listdir, unlink
 from os.path import isfile, join, isfile, islink, isdir
@@ -96,10 +96,7 @@ def generate_blogs():
     # generate html for each blog site
     for b in blogs: 
         # [[content]] html
-        content_html = ""
-        with open(join(path_to_blogs, b + '.md'), 'r') as f:
-            text = f.read()
-            content_html = markdown.markdown(text)
+        content_html = pypandoc.convert_file(join(path_to_blogs, b + '.md'), 'html', format='md')
 
         # json dict
         b_json_dict = {}
