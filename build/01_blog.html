@@ -24,15 +24,15 @@
 <li>make the site look somewhat nice</li>
 </ul>
 <h2 id="inspiration-and-credits">Inspiration and credits</h2>
-<p>Massive credit to <a href="https://github.com/Supercip971">Supercip971</a> on github. He (?) has a great <a href="https://supercip971.github.io/">personal blog</a> as well as an article on how he did it.</p>
-<p>I used his method of converting markdown and config files to html. I also used the same styling he did (the css file I used is straight from him).</p>
+<p>Massive credit to <a href="https://github.com/Supercip971">Supercip971</a> on github. He (?) has a great <a href="https://supercip971.github.io/">personal blog</a> as well as an <a href="https://supercip971.github.io/01-how-I-created-this-blog.html">article</a> on how he did it.</p>
+<p>I used his method of converting markdown and config files to html. I also used the same styling he did (the css file I used is just modified version of his).</p>
 <h2 id="markdown-to-html-conversion">Markdown to html conversion</h2>
-<p>I used pypandoc to convert markdown to html. This is used to convert blog articles written in markdown to html. It’s what Supercip971 used and it’s the only library I could find that satisfactorily converted markdown to html.</p>
+<p>I used pypandoc to convert markdown to html. It’s what Supercip971 used and it’s the only library I could find that satisfactorily converted markdown to html.</p>
 <p>There is another library called python-markdown, but it does not properly create html for codeblocks.</p>
 <h2 id="dynamic-html-generation">Dynamic html generation</h2>
 <p>The final html for this site is dynamically generated from:</p>
 <ol type="1">
-<li>the markdown files</li>
+<li>markdown files</li>
 <li>json configuration files</li>
 <li>templated html</li>
 </ol>
@@ -41,18 +41,18 @@
 <p>Let’s take a closer look at the templated html and json config files. Throughout the template, there are lines that look like:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... html above ... --&gt;</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span> {{ title }} <span class="kw">&lt;/h1&gt;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- .. more --&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... more html ... --&gt;</span></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;p&gt;</span> {{ date }} <span class="kw">&lt;/p&gt;</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... html below ... --&gt;</span></span></code></pre></div>
-<p>“title” and “date” are both keys that are meant to be replaced. Keys are surrounded by double brackets. Looking at the json config file:</p>
+<p>“title” and “date” are both keys that are meant to be replaced. Keys are surrounded by double brackets. Here is a corresponding json config file:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode json"><code class="sourceCode json"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;title&quot;</span><span class="fu">:</span> <span class="st">&quot;new blog!&quot;</span><span class="fu">,</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">&quot;date&quot;</span><span class="fu">:</span> <span class="st">&quot;2 May 2021&quot;</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">}</span></span></code></pre></div>
-<p>Our keys “title” and “date” are defined with values “new blog!” and “2 May 2021” respectively. Given this json config file and the templated html, the python script will find keys and replace them with the values defined in the json file to generate the final html. Our final html will look like:</p>
+<p>Our keys “title” and “date” are defined with values “new blog!” and “2 May 2021” respectively. Given this json config file and templated html, the python script will find keys in the template html and replace them with the values defined in the json file to generate finalized html. Our final html will look like:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode html"><code class="sourceCode html"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... html above ... --&gt;</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;h1&gt;</span> new blog! <span class="kw">&lt;/h1&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- .. more --&gt;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... more html ... --&gt;</span></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="kw">&lt;p&gt;</span> 2 May 2021 <span class="kw">&lt;/p&gt;</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- ... html below ... --&gt;</span></span></code></pre></div>
 <h2 id="content-sections">Content sections</h2>

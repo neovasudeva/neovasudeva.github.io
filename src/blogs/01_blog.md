@@ -10,14 +10,13 @@ I wanted to create a personal site to contain my projects along with the steps I
 ## Inspiration and credits
 
 Massive credit to [Supercip971](https://github.com/Supercip971) on github. He (?) has a great [personal blog](https://supercip971.github.io/)
-as well as an article on how he did it.
+as well as an [article](https://supercip971.github.io/01-how-I-created-this-blog.html) on how he did it.
 
-I used his method of converting markdown and config files to html. I also used the same styling he did (the css file I used is straight from him).
+I used his method of converting markdown and config files to html. I also used the same styling he did (the css file I used is just modified version of his).
 
 ## Markdown to html conversion
 
-I used pypandoc to convert markdown to html. This is used to convert
-blog articles written in markdown to html. It's what Supercip971 used and it's the only library I could find that satisfactorily converted markdown to html.
+I used pypandoc to convert markdown to html. It's what Supercip971 used and it's the only library I could find that satisfactorily converted markdown to html.
 
 There is another library called python-markdown, but it does not properly create
 html for codeblocks.
@@ -26,7 +25,7 @@ html for codeblocks.
 
 The final html for this site is dynamically generated from:
 
-1. the markdown files
+1. markdown files
 2. json configuration files
 3. templated html
 
@@ -39,12 +38,12 @@ Let's take a closer look at the templated html and json config files. Throughout
 ```html
 <!-- ... html above ... -->
 <h1> {{ title }} </h1>
-<!-- .. more -->
+<!-- ... more html ... -->
 <p> {{ date }} </p>
 <!-- ... html below ... -->
 ```
 
-"title" and "date" are both keys that are meant to be replaced. Keys are surrounded by double brackets. Looking at the json config file:
+"title" and "date" are both keys that are meant to be replaced. Keys are surrounded by double brackets. Here is a corresponding json config file:
 
 ```json
 {
@@ -53,12 +52,12 @@ Let's take a closer look at the templated html and json config files. Throughout
 }
 ```
 
-Our keys "title" and "date" are defined with values "new blog!" and "2 May 2021" respectively. Given this json config file and the templated html, the python script will find keys and replace them with the values defined in the json file to generate the final html. Our final html will look like:
+Our keys "title" and "date" are defined with values "new blog!" and "2 May 2021" respectively. Given this json config file and templated html, the python script will find keys in the template html and replace them with the values defined in the json file to generate finalized html. Our final html will look like:
 
 ```html
 <!-- ... html above ... -->
 <h1> new blog! </h1>
-<!-- .. more -->
+<!-- ... more html ... -->
 <p> 2 May 2021 </p>
 <!-- ... html below ... -->
 ```
