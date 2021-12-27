@@ -72,7 +72,7 @@ Templated html will also have sections that contain:
 <!-- ... html below ... -->
 ```
 
-where \[\[content\]\] will be replaced with html generated from markdown. For example, This is used for blog article html where the article itself is created in markdown and then converted to html via pypandoc.
+where \[\[content\]\] will be replaced with html generated from markdown. For example, this is used for blog article html where the article itself is created in markdown and then converted to html via pypandoc.
 
 ## Deployment
 
