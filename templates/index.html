@@ -2,9 +2,6 @@
 <html>
 
 <head>
-    <style>
-
-    </style>
     <title>
         {{page_name}}
     </title>
@@ -12,17 +9,14 @@
 </head>
 
 <body>
-    <img src="./assets/img/neo_img.jpg" alt="fill later" style="width: 120px;">
-    <h1>
-        {{page_name}}
-    </h1>
-    <h4>
-        {{summary}}
-    </h4>
+    <div class="index_head">
+      <img src="./assets/img/neo_img.jpg" alt="img neo" style="width: 120px;">
+      <h1>{{page_name}}</h1>
+      <h4>{{summary}}</h4>
+      <h4> <a href="{{source}}"> source code </a> -- <a href="about.html"> about </a> -- <a href="assets/resume.pdf"> resume </a></h4>
+    </div>
 
     [[content]]
 
-    <h4> <a href="{{source}}"> source code </a> -- <a href="about.html"> about </a> -- <a href="assets/resume.pdf"> resume </a></h4>
-    <h5> credit to <a href="https://github.com/Supercip971">supercip971</a> from whom i learned how to create this site </h5>
 </body>
 </html>
