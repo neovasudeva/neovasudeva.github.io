@@ -18,7 +18,7 @@ path_to_assets = './assets'
 def generate_projects_html():
     # get projects
     projects = [f for f in listdir(path_to_projects) if isfile(join(path_to_projects, f))] 
-    projects = list(filter(lambda x: x[x.rindex('.')+1:] == "json", projects))
+    projects = sorted(projects, reverse=True)
 
     # read each project's json and add to projects_html
     projects_html = []
