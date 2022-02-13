@@ -33,18 +33,6 @@ body {
     color: #fda754;
 }
 
-.blog_entry {
-    line-height: initial;
-    background-color: #212733;
-    padding-bottom: 20px;
-
-}
-
-.blog_entry>* {
-    margin: 20px;
-    line-height: 1;
-}
-
 .project_entry {
     line-height: initial;
     background-color: #212733;
