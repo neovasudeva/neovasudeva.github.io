@@ -7,8 +7,8 @@ from os import listdir, unlink
 from os.path import isfile, join, isfile, islink, isdir
 
 # globals
-path_to_index = './src/index'
-path_to_projects = './src/projects'
+path_to_index = './src/index.json'
+path_to_projects = './src/projects.json'
 path_to_templates = './templates'
 path_to_build = './build'
 path_to_assets = './assets'
@@ -16,33 +16,44 @@ path_to_assets = './assets'
 ## Functions for generating index.html ##
 # parses projects directory and returns project html
 def generate_projects_html():
-    # get projects
-    projects = [f for f in listdir(path_to_projects) if isfile(join(path_to_projects, f))] 
-    projects = sorted(projects, reverse=True)
+    # get json string from projects.json
+    with open(path_to_projects) as f_project:
+        p_str = ''.join(f_project.readlines())
+        projects = json.loads(p_str)['projects']
 
-    # read each project's json and add to projects_html
-    projects_html = []
-    for p in projects:
-        with open(join(path_to_projects, p), 'r') as p_json:
-            p_json_dict = json.loads(p_json.read())
-            p_html = \
-                "<h2> " + p_json_dict["title"] + " </h2>\n" + \
-                "<h5> finished " + p_json_dict["date"] + " </h5>\n" + \
-                "<h4> " + p_json_dict["proj_summary"] + " </h4>\n" + \
-                "<a href=\"" + p_json_dict["gh_link"] + "\">see code</a>" 
+        # read each project's json and add to projects_html
+        projects_html = []
+        for p_json_dict in projects:
+            p_html = ""
+            if p_json_dict["date"] == "N/A":
+                p_html = \
+                    "<h2> " + p_json_dict["title"] + " </h2>\n" + \
+                    "<h5> in progress ... </h5>\n" + \
+                    "<h4> " + p_json_dict["proj_summary"] + " </h4>\n" + \
+                    "<a href=\"" + p_json_dict["gh_link"] + "\">see code</a>" 
+            else:
+                p_html = \
+                    "<h2> " + p_json_dict["title"] + " </h2>\n" + \
+                    "<h5> finished " + p_json_dict["date"] + " </h5>\n" + \
+                    "<h4> " + p_json_dict["proj_summary"] + " </h4>\n" + \
+                    "<a href=\"" + p_json_dict["gh_link"] + "\">see code</a>" 
+
             projects_html.append(p_html)
 
-    # surround each project with div
-    projects_html = list(map(lambda x: "<div class=\"project_entry\">\n" + x + "\n</div>", projects_html))
-    projects_html.insert(0, "<p> some of my projects </p> ")
+        # surround each project with div
+        projects_html = list(map(lambda x: "<div class=\"project_entry\">\n" + x + "\n</div>", projects_html))
+        projects_html.insert(0, "<p> some of my projects </p> ")
 
-    return projects_html
+        return projects_html
+
+    print("Unable to open file ", path_to_project)
+    return None
 
 # combine index template and blog/projects html to form index.html
 def generate_index_html():
     # STEP 1: parse index.json and replace {{}} occurrences
     index_json_dict = {}
-    with open(join(path_to_index, 'index.json'), 'r') as index_json:
+    with open(path_to_index, 'r') as index_json:
         index_json_dict = json.loads(index_json.read())
     
     index_txt = ""
@@ -88,6 +99,7 @@ def create_build():
     shutil.copytree(path_to_assets, join(path_to_build, 'assets'))
 
 if __name__ == '__main__':
+    generate_projects_html()
     clear_build()
     create_build()
 
